@@ -1,30 +1,28 @@
-# vue-music-app
-
-> A Vue.js project
-
-## Build Setup
-
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
-```
-
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+学习到的东西  https://static.galileo.xiaojukeji.com/static/tms/shield/Vue.js_music_xmind.png
+src结构分析
+  api 放置获取真实数据
+    config.js 一些基础配置
+    recommend.js 通过引用jsonp插件，抓取QQ音乐的真实数据
+  base 基础组件模块库（实际项目中，把这些封装成npm模块）
+    scroll 滚动组件
+    slider 轮播图组件
+  common 放字体、图标、js。css的
+    fonts 字体文件夹
+    images 图片文件夹
+  js
+    dom.js 放置一些操作dom的方法，比如addClass、hasClss
+    jsonp.js 对jsonp模块进行加工，对外暴露一个jsonp方法
+  stylus css
+    base.styl 基础css配置，比如字体类型
+    icon.styl 图标字体
+    index.styl 用来加载其他css文件
+    mixin.styl 一些常用的css，传入不同的参数，显示不同的效果
+    reset.styl 重置css
+    variable.styl 颜色定义 字体定义
+  components 功能组件文件夹
+    m-header 头部组件
+    rank 排行页面组件
+    recommend 推荐组件
+    search 查询组件
+    singer 歌手页面组件
+    tab tab组件

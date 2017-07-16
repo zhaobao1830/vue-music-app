@@ -1,7 +1,7 @@
 <template>
   <div class="recommend">
     <div class="recommend-content">
-      <div class="slider-wrapper">
+      <div v-if="recommends.length" class="slider-wrapper">
         <div class="slider-content">
           <slider>
             <div v-for="item in recommends">
