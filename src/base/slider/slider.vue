@@ -44,9 +44,15 @@
           this._play()
         }
       }, 20)  //  浏览器刷新时间是17毫秒，所以这里设置了20毫秒后执行方法
+      window.addEventListener('resize', () => {
+        if (!this.slider) {
+          return
+        }
+        this._setSliderWidth(true)
+      })
     },
     methods: {
-      _setSliderWidth () {
+      _setSliderWidth (isResize) {
         this.children = this.$refs.sliderGroup.children
         let width = 0
         let sliderWidth = this.$refs.slider.clientWidth
@@ -57,7 +63,7 @@
           width += sliderWidth
         }
         //  当可以轮播的时候，长度是正常长度的2倍，这个是轮播图的内容
-        if (this.loop) {
+        if (this.loop && !isResize) {
           width += 2 * sliderWidth
         }
         this.$refs.sliderGroup.style.width = width + 'px'
@@ -78,6 +84,9 @@
             pageIndex = pageIndex - 1
           }
           this.currentPageIndex = pageIndex
+          if (this.autoPlay) {
+            this._play()
+          }
         })
       },
       __initDots () {
