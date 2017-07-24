@@ -22,14 +22,12 @@
       }
     },
     mounted () {
-      console.log('oo')
       setTimeout(() => {
         this._initScrolll()
       }, 20)
     },
     methods: {
       _initScrolll () {
-        console.log('uuuu')
         if (!this.$refs.wrapper) {
           return
         }
