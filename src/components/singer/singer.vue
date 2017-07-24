@@ -18,7 +18,7 @@
       _getSingerList: function () {
         getSingerList().then((res) => {
           if (res.code === ERR_OK) {
-            this.singers =
+//            this.singers =
           }
         })
       }
