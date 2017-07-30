@@ -19,6 +19,10 @@
       data: {
         type: Array,
         default: null
+      },
+      listenScroll: {
+        type: Boolean,
+        default: false
       }
     },
     mounted () {
@@ -35,6 +39,16 @@
           probeType: this.probeType,
           click: this.click
         })
+        if (this.listenScroll) {
+          // scroll里面的this默认是指向scroll的，而不是指向当前的Vue实例
+          // 所以在前面定义一个me，来保存当前this,这样就可以在这个回调里面
+          // 用vue这个实例调用$emit方法，去派发一个scroll事件
+          // 在外面监听这个scroll事件，来获取当前滚动到的位置
+          let me = this
+          this.scroll.on('scroll', (pos) => {
+            me.$emit('scrolls', pos)
+          })
+        }
       },
       ebable () {
         this.scroll && this.scroll.enable()
