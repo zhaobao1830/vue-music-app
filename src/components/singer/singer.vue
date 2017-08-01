@@ -1,6 +1,7 @@
 <template>
   <div class="singer">
-    <list-view :data="singers"></list-view>
+    <list-view @select="selectSinger" :data="singers"></list-view>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -23,14 +24,20 @@
       this._getSingerList()
     },
     methods: {
-      _getSingerList: function () {
+      selectSinger (singer) {
+        // router的编程式调用接口，类似于申明式<router-link :to="...">
+        this.$router.push({
+          path: `/singer/${singer.id}`
+        })
+      },
+      _getSingerList () {
         getSingerList().then((res) => {
           if (res.code === ERR_OK) {
             this.singers = this._normalizeSinger(res.data.list)
           }
         })
       },
-      _normalizeSinger: function (list) {
+      _normalizeSinger (list) {
         let map = {
           hot: {
             title: HOT_NAME,
