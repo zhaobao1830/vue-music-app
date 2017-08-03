@@ -1,7 +1,9 @@
 学习到的东西  https://static.galileo.xiaojukeji.com/static/tms/shield/Vue.js_music_xmind.png
 
 src结构分析
+
   api 放置获取真实数据
+
     config.js 一些基础配置
     recommend.js 通过引用jsonp插件，抓取QQ音乐的真实数据
   base 基础组件模块库（实际项目中，把这些封装成npm模块）
