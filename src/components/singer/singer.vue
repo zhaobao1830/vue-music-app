@@ -24,20 +24,14 @@
       this._getSingerList()
     },
     methods: {
-      selectSinger (singer) {
-        // router的编程式调用接口，类似于申明式<router-link :to="...">
-        this.$router.push({
-          path: `/singer/${singer.id}`
-        })
-      },
-      _getSingerList () {
+      _getSingerList: function () {
         getSingerList().then((res) => {
           if (res.code === ERR_OK) {
             this.singers = this._normalizeSinger(res.data.list)
           }
         })
       },
-      _normalizeSinger (list) {
+      _normalizeSinger: function (list) {
         let map = {
           hot: {
             title: HOT_NAME,
