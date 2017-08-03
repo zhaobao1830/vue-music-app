@@ -33,4 +33,7 @@ src结构分析
     recommend 推荐组件
     search 查询组件
     singer 歌手页面组件
+    singer-detail 歌手详情页面组件
     tab tab组件
+  store vuex的配置
+
