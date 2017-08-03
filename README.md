@@ -1,4 +1,5 @@
 学习到的东西  https://static.galileo.xiaojukeji.com/static/tms/shield/Vue.js_music_xmind.png
+
 src结构分析
   api 放置获取真实数据
     config.js 一些基础配置
