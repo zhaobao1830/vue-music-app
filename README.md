@@ -18,6 +18,8 @@ src结构分析
 
     dom.js 放置一些操作dom的方法，比如addClass、hasClss
     jsonp.js 对jsonp模块进行加工，对外暴露一个jsonp方法
+    singer.js 封装singer类 singer.vue用
+    song.js  封装song类 singer-detail.vue用
   stylus css
 
     base.styl 基础css配置，比如字体类型
