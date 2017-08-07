@@ -38,7 +38,7 @@
     },
     data () {
       return {
-        scrolly: -1
+        scrollY: -1
       }
     },
     created () {
@@ -60,8 +60,8 @@
     },
     watch: {
       scrollY (newY) {
-//        有问题
-        this.$refs.layer.$el.style.transform = `translate3d(0,${newY}px,0)`
+        console.log(this.$refs.layer)
+        this.$refs.layer.style.transform = `translate3d(0,${newY}px,0)`
         this.$refs.layer.style[`webkitTransform`] = `translate3d(0,${newY}px,0)`
       }
     },
