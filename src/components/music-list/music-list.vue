@@ -1,17 +1,26 @@
 <template>
   <div class="music-list">
-    <div class="back">
+    <div class="back" @click="back">
       <i class="icon-back"></i>
     </div>
     <h1 class="title" v-html="title"></h1>
     <div class="bg-image" ref="bgImage" :style="bgStyle">
-      <div class="filter"></div>
+      <div class="play-wrapper">
+        <div ref="playBtn" v-show="songs.length>0" class="play">
+          <i class="icon-play"></i>
+          <span class="text">随机播放全部</span>
+        </div>
+      </div>
+      <div class="filter" ref="filter"></div>
     </div>
     <div class="bg-layer" ref="layer"></div>
     <Scroll :data="songs" @scrolls="scroll"
             :probeType="probeType" :listenScroll="listenScroll" class="list" ref="list">
       <div class="song-list-wrapper">
         <song-list :songs="songs"></song-list>
+      </div>
+      <div v-show="!songs.length" class="loading-container">
+        <loading></loading>
       </div>
     </Scroll>
   </div>
@@ -20,8 +29,11 @@
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
   import SongList from 'base/song-list/song-list'
+  import {prefixStyle} from 'common/js/dom'
 
   const RESERVED_HEIGHT = 40
+  const transform = prefixStyle('transform')
+  const backdrop = prefixStyle('backdrop-filter')
 
   export default {
     props: {
@@ -60,23 +72,41 @@
     methods: {
       scroll (pos) {
         this.scrollY = pos.y
+      },
+      back () {
+        this.$router.back()
       }
     },
     watch: {
       scrollY (newY) {
         let translateY = Math.max(this.minTranslateY, newY)
         let zIndex = 0
-        this.$refs.layer.style.transform = `translate3d(0,${translateY}px,0)`
-        this.$refs.layer.style[`webkitTransform`] = `translate3d(0,${translateY}px,0)`
+        let scale = 1
+        let blur = 0
+//        this.$refs.layer.style.transform = `translate3d(0,${translateY}px,0)`
+        this.$refs.layer.style[transform] = `translate3d(0,${translateY}px,0)`
+        const percent = Math.abs(newY / this.imageHeight)
+        if (newY > 0) {
+          scale = 1 + percent
+          zIndex = 10
+        } else {
+          blur = Math.min(20 * percent, 20)
+        }
+        this.$refs.filter.style[backdrop] = `blur(${blur}px)`
+//        this.$refs.filter.style['webkitBackdrop-filter'] = `blur(${blur}px)`
         if (newY < this.minTranslateY) {
           zIndex = 10
           this.$refs.bgImage.style.paddingTop = 0
           this.$refs.bgImage.style.height = `${RESERVED_HEIGHT}px`
+          this.$refs.playBtn.style.display = 'none'
         } else {
-          zIndex = 0
           this.$refs.bgImage.style.paddingTop = `70%`
           this.$refs.bgImage.style.height = 0
+          this.$refs.playBtn.style.display = ''
         }
+        console.log(zIndex)
+//        this.$refs.bgImage.style.transform = `scale(${scale})`
+        this.$refs.bgImage.style[transform] = `scale(${scale})`
         this.$refs.bgImage.style.zIndex = zIndex
       }
     },
