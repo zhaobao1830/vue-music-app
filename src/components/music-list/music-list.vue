@@ -104,7 +104,6 @@
           this.$refs.bgImage.style.height = 0
           this.$refs.playBtn.style.display = ''
         }
-        console.log(zIndex)
 //        this.$refs.bgImage.style.transform = `scale(${scale})`
         this.$refs.bgImage.style[transform] = `scale(${scale})`
         this.$refs.bgImage.style.zIndex = zIndex
