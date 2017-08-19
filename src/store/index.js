@@ -8,7 +8,7 @@ import * as getters from './getters'
 import state from './state'
 import mutations from './mutations'
 import createLogger from 'vuex/dist/logger'
-
+// createLogger的作用是：我们每次修改store里面的数据时，会在控制台打印，搞事修改之前是什么样，修改后是什么样
 Vue.use(Vuex)
 
 // 开发环境为true

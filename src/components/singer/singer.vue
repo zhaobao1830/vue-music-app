@@ -10,6 +10,7 @@
   import {ERR_OK} from 'api/config'
   import Singer from 'common/js/singer'
   import ListView from 'base/listview/listview'
+//  mapMutations这是vuex提供的一个语法糖
   import {mapMutations} from 'vuex'
 
   const HOT_NAME = '热门'
@@ -80,6 +81,12 @@
         })
         return hot.concat(ret)
       },
+//      这是一个映射，把mutation-types里面的SET_SINGER映射成一个setSinger方法
+//      然后我们可以使用this.setSinger来commit一个mutation，
+//      执行了mutations [types.SET_SINGER] (state, singer) {
+//      state.singer = singer
+//       },这个函数
+//      进而改变store里面的singer
       ...mapMutations({
         setSinger: 'SET_SINGER'
       })

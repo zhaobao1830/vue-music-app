@@ -17,7 +17,7 @@
     <Scroll :data="songs" @scrolls="scroll"
             :probeType="probeType" :listenScroll="listenScroll" class="list" ref="list">
       <div class="song-list-wrapper">
-        <song-list :songs="songs"></song-list>
+        <song-list @select="selectItem" :songs="songs"></song-list>
       </div>
       <div v-show="!songs.length" class="loading-container">
         <loading></loading>
@@ -29,7 +29,9 @@
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
   import SongList from 'base/song-list/song-list'
+  import loading from 'base/loading/loading'
   import {prefixStyle} from 'common/js/dom'
+  import {mapActions} from 'vuex'
 
   const RESERVED_HEIGHT = 40
   const transform = prefixStyle('transform')
@@ -75,7 +77,18 @@
       },
       back () {
         this.$router.back()
-      }
+      },
+      // 这里明明没有用到item，为什么还需要song-list传过来呢，这是因为作为子组件，我们不需要管父组件如何，
+      // 应该把与自己有关的数据发送到父组件
+      selectItem (item, index) {
+        this.selectPlay({
+          list: this.songs,
+          index: index
+        })
+      },
+      ...mapActions([
+        'selectPlay'
+      ])
     },
     watch: {
       scrollY (newY) {
@@ -111,7 +124,8 @@
     },
     components: {
       Scroll,
-      SongList
+      SongList,
+      loading
     }
   }
 </script>

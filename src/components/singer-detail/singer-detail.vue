@@ -6,6 +6,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+//  vuex提供的语法糖，用来获取store里面的数据
   import {mapGetters} from 'vuex'
   import {ERR_OK} from 'api/config'
   import {getSingerDetail} from 'api/singer'
@@ -20,6 +21,7 @@
       bgImage () {
         return this.singer.avatar
       },
+//      singer对应的是getters.js里面的export const singer = state => state.singer
       ...mapGetters([
         'singer'
       ])
