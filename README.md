@@ -31,6 +31,9 @@ src结构分析
   components 功能组件文件夹
 
     m-header 头部组件
+    music-list 音乐列表组件
+    play 播放器组件
+       create-keyframe-animation
     rank 排行页面组件
     recommend 推荐组件
     search 查询组件
