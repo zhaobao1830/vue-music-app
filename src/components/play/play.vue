@@ -1,6 +1,12 @@
 <template>
   <div class="player" v-show="playlist.length>0">
-    <div class="normal-player" v-show="fullScreen">
+    <transition name="normal"
+                @enter="enter"
+                @after-enter="afterEnter"
+                @leave="leave"
+                @after-leave="afterLeave"
+    >
+      <div class="normal-player" v-show="fullScreen">
       <div class="background">
         <img width="100%" height="100%" :src="currentSong.image">
       </div>
@@ -13,7 +19,7 @@
       </div>
       <div class="middle">
         <div class="middle-l">
-          <div class="cd-wrapper">
+          <div class="cd-wrapper" ref="cdWrapper">
             <div class="cd">
               <img class="image" :src="currentSong.image">
             </div>
@@ -40,7 +46,9 @@
         </div>
       </div>
     </div>
-    <div class="mini-player" v-show="!fullScreen" @click="open">
+    </transition>
+    <transition name="mini">
+      <div class="mini-player" v-show="!fullScreen" @click="open">
       <div class="icon">
         <img width="40" height="40" :src="currentSong.image">
       </div>
@@ -55,11 +63,16 @@
         <i class="icon-playlist"></i>
       </div>
     </div>
+    </transition>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import {mapGetters, mapMutations} from 'vuex'
+  import animations from 'create-keyframe-animation'
+  import {prefixStyle} from 'common/js/dom'
+
+  const transform = prefixStyle('transform')
   export default {
     computed: {
       ...mapGetters([
@@ -74,6 +87,61 @@
       },
       open () {
         this.setFullScreen(true)
+      },
+      enter (el, done) {
+        const {x, y, scale} = this._getPosAndScale()
+        let animation = {
+          0: {
+            transfrom: `translate3d(${x}px, ${y}px, 0) scale(${scale})`
+          },
+          60: {
+            transfrom: `translate3d(0, 0, 0) scale(1.1)`
+          },
+          100: {
+            transform: `translated3d(0, 0, 0) scale(1)`
+          }
+        }
+        animations.registerAnimation({
+          name: 'move',
+          animation,
+          presets: {
+            duration: 400, // 动画间隔时间
+            easing: 'linear'
+          }
+        })
+        //  执行完以后运行done函数，执行完done函数后，会跳转到afterEnter
+        animations.runAnimation(this.$refs.cdWrapper, 'move', done)
+      },
+      afterEnter () {
+        // 清空cdWrapper的animation的值
+        animations.unregisterAnimation('move')
+        this.$refs.cdWrapper.animation = ''
+      },
+      leave (el, done) {
+        this.$refs.cdWrapper.style.transition = 'all 0.4s'
+        const {x, y, scale} = this._getPosAndScale()
+        this.$refs.cdWrapper.style[transform] = `translate3d(${x}px,${y}px,0) scale(${scale})`
+        this.$refs.cdWrapper.addEventListener('transitionend', done)
+      },
+      afterLeave () {
+        this.$refs.cdWrapper.style.transition = ''
+        this.$refs.cdWrapper.style[transform] = ''
+      },
+//      获取初始位置和初始缩放比例
+      _getPosAndScale () {
+        const targetWidth = 40 // mini左侧图标大小
+        const paddingLeft = 40 // mini左侧图标距离左侧的长度
+        const paddingBottom = 30 // mini左侧图标距离底部的长度
+        const paddingTop = 80 // nomal唱片距离头部的长度
+        const width = window.innerWidth * 0.8 // nomal唱片一半的宽度
+        const scale = targetWidth / width
+        const x = -(window.innerWidth / 2 - paddingLeft)
+        const y = window.innerHeight - paddingTop - width / 2 - paddingBottom
+        return {
+          x,
+          y,
+          scale
+        }
       },
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCREEN'
