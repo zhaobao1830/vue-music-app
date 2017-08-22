@@ -35,7 +35,7 @@
             <i class="icon-prev"></i>
           </div>
           <div class="icon i-center">
-            <i class="icon-play"></i>
+            <i @click="togglePlaying" class="icon-play"></i>
           </div>
           <div class="icon i-right">
             <i class="icon-next"></i>
@@ -64,6 +64,7 @@
       </div>
     </div>
     </transition>
+    <audio ref="audio" :src="currentSong.url"></audio>
   </div>
 </template>
 
@@ -78,7 +79,8 @@
       ...mapGetters([
         'fullScreen', // 播放器是否全屏
         'playlist',
-        'currentSong'
+        'currentSong',
+        'playing'
       ])
     },
     methods: {
@@ -143,9 +145,26 @@
           scale
         }
       },
+      togglePlaying () {
+        this.setPlayingState(!this.playing)
+      },
       ...mapMutations({
-        setFullScreen: 'SET_FULL_SCREEN'
+        setFullScreen: 'SET_FULL_SCREEN',
+        setPlayingState: 'SET_PLAYING_STATE'
       })
+    },
+    watch: {
+      currentSong () {
+        this.$nextTick(() => {
+          this.$refs.audio.play()
+        })
+      },
+      playing (newPlaying) {
+        const audio = this.$refs.audio
+        this.$nextTick(() => {
+          newPlaying ? audio.play() : audio.pause()
+        })
+      }
     }
   }
 </script>
