@@ -1,6 +1,7 @@
 /**
  * 入口文件
  */
+import 'babel-polyfill'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import * as actions from './actions'
