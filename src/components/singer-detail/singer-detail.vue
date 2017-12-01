@@ -1,7 +1,6 @@
 <template>
   <transition name="slide">
     <music-list :songs="songs" :title="title" :bgImage="bgImage"></music-list>
-    <router-view></router-view>
   </transition>
 </template>
 
