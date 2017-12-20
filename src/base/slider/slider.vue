@@ -63,6 +63,7 @@
           width += sliderWidth
         }
         //  当可以轮播的时候，长度是正常长度的2倍，这个是轮播图的内容
+        // isResize为true的时候，表示页面宽度改变，这个时候不会width不会再加sliderWidth
         if (this.loop && !isResize) {
           width += 2 * sliderWidth
         }
@@ -99,6 +100,7 @@
         }
         clearTimeout(this.timer)
         this.timer = setTimeout(() => {
+          // pageIndex X轴 0 Y轴 400 间隔
           this.slider.goToPage(pageIndex, 0, 400)
         }, this.interval)
       }

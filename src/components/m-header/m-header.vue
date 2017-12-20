@@ -34,13 +34,4 @@
       vertical-align: top
       line-height: 44px
       font-size: $font-size-large
-    .mine
-      position: absolute
-      top: 0
-      right: 0
-      .icon-mine
-        display: block
-        padding: 12px
-        font-size: 20px
-        color: $color-theme
 </style>
