@@ -19,7 +19,15 @@
         query: ''
       }
     },
+    created () {
+      this.$watch('query', (newQuery) => {
+        this.$emit('query', newQuery)
+      })
+    },
     methods: {
+      setQuery (query) {
+        this.query = query
+      },
       clear () {
         this.query = ''
       }
