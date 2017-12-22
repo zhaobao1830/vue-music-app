@@ -6,7 +6,7 @@
           :pullup="pullup"
           @scrollToEnd="searchMore">
     <ul class="suggest-list">
-      <li class="suggest-item" v-for="(item, index) in result">
+      <li @click="selectItem(item)" class="suggest-item" v-for="(item, index) in result">
         <div class="icon">
           <i :class="getIconCls(item)"></i>
         </div>
@@ -25,6 +25,9 @@
   import {search} from 'api/search'
   import {ERR_OK} from 'api/config'
   import {createSong} from 'common/js/song'
+  import Singer from 'common/js/singer'
+  import {mapMutations} from 'vuex'
+
   const TYPE_SINGER = 'singer'
   const perpage = 20
 
@@ -116,7 +119,25 @@
         if (!song.list.length || (song.curnum + (song.curpage - 1) * perpage) >= song.totalnum) {
           this.hasMore = false
         }
-      }
+      },
+      selectItem (item) {
+        // 如果这个item的type是歌手，就跳转到歌手页面
+        // 创建一个singer对象，然后通过vuex的action提交，改变setSinger
+        if (item.type === TYPE_SINGER) {
+          const singer = new Singer({
+            id: item.singermid,
+            name: item.singername
+          })
+          console.log(singer)
+          this.$router.push({
+            path: `/search/${singer.id}`
+          })
+          this.setSinger(singer)
+        }
+      },
+      ...mapMutations({
+        setSinger: 'SET_SINGER'
+      })
     },
     components: {
       Scroll,

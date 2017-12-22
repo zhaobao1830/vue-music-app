@@ -45,6 +45,9 @@
       },
       onQueryChange (query) {
         this.query = query.trim()
+      },
+      addQuery (query) {
+        this.$refs.searchBox.setQuery(query)
       }
     },
     components: {
