@@ -23,6 +23,11 @@
       listenScroll: {
         type: Boolean,
         default: false
+      },
+      // 是否开启上拉刷新
+      pullup: {
+        type: Boolean,
+        default: false
       }
     },
     mounted () {
@@ -47,6 +52,13 @@
           let me = this
           this.scroll.on('scroll', (pos) => {
             me.$emit('scrolls', pos)
+          })
+        }
+        if (this.pullup) {
+          this.scroll.on('scrollEnd', () => {
+            if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
+              this.$emit('scrollToEnd')
+            }
           })
         }
       },

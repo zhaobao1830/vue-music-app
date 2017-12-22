@@ -1,7 +1,12 @@
+<!--搜索结果-->
 <template>
-  <div class="suggest">
+  <Scroll ref="suggest"
+          class="suggest"
+          :data="result"
+          :pullup="pullup"
+          @scrollToEnd="searchMore">
     <ul class="suggest-list">
-      <li v-for="(item, index) in result">
+      <li class="suggest-item" v-for="(item, index) in result">
         <div class="icon">
           <i :class="getIconCls(item)"></i>
         </div>
@@ -9,14 +14,17 @@
           <p class="text" v-html="getDisplayName(item)"></p>
         </div>
       </li>
+      <loading v-show="hasMore" title=""></loading>
     </ul>
-  </div>
+  </Scroll>
 </template>
 
 <script type="text/ecmascript-6">
+  import Scroll from 'base/scroll/scroll'
+  import Loading from 'base/loading/loading'
   import {search} from 'api/search'
   import {ERR_OK} from 'api/config'
-
+  import {createSong} from 'common/js/song'
   const TYPE_SINGER = 'singer'
   const perpage = 20
 
@@ -33,16 +41,40 @@
     },
     data () {
       return {
-        result: []
+        page: 1,
+        result: [],
+        pullup: true,
+        hasMore: true
+      }
+    },
+    watch: {
+      query () {
+        this.search()
       }
     },
     methods: {
       search () {
         this.page = 1
         this.hasMore = true
+        // 下面这行代码是因为，当滚动查询出的值以后，再在查询框输入值，会出现问题，
+        // 原因就在于scroll的位置是滚动以后的位置
+        // 解决方法是：在search()方法的时候，初始化scroll的x,y值
+        this.$refs.suggest.scrollTo(0, 0)
         search(this.query, this.page, this.showSinger, perpage).then((res) => {
           if (res.code === ERR_OK) {
             this.result = this._genResult(res.data)
+            this._checkMore(res.data)
+          }
+        })
+      },
+      searchMore () {
+        if (!this.hasMore) {
+          return
+        }
+        search(this.query, this.page, this.showSinger, perpage).then((res) => {
+          if (res.code === ERR_OK) {
+            this.result = this.result.concat(this._genResult(res.data))
+            this._checkMore(res.data)
           }
         })
       },
@@ -52,8 +84,17 @@
           ret.push({...data.zhida, ...{type: TYPE_SINGER}})
         }
         if (data.song) {
-          ret = ret.concat((data.song.list))
+          ret = ret.concat(this._normalizeSongs(data.song.list))
         }
+        return ret
+      },
+      _normalizeSongs (list) {
+        let ret = []
+        list.forEach((musicData) => {
+          if (musicData.songid && musicData.albummid) {
+            ret.push(createSong(musicData))
+          }
+        })
         return ret
       },
       getIconCls (item) {
@@ -69,12 +110,17 @@
         } else {
           return `${item.name}-${item.singer}`
         }
+      },
+      _checkMore (data) {
+        const song = data.song
+        if (!song.list.length || (song.curnum + (song.curpage - 1) * perpage) >= song.totalnum) {
+          this.hasMore = false
+        }
       }
     },
-    watch: {
-      query () {
-        this.search()
-      }
+    components: {
+      Scroll,
+      Loading
     }
   }
 </script>
