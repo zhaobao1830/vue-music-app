@@ -16,17 +16,21 @@
       </li>
       <loading v-show="hasMore" title=""></loading>
     </ul>
+    <div v-show="!hasMore && !result.length" class="no-result-wrapper">
+      <no-result title="抱歉，暂无搜索结果"></no-result>
+    </div>
   </Scroll>
 </template>
 
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
   import Loading from 'base/loading/loading'
+  import NoResult from 'base/no-result/no-result'
   import {search} from 'api/search'
   import {ERR_OK} from 'api/config'
   import {createSong} from 'common/js/song'
   import Singer from 'common/js/singer'
-  import {mapMutations} from 'vuex'
+  import {mapMutations, mapActions} from 'vuex'
 
   const TYPE_SINGER = 'singer'
   const perpage = 20
@@ -133,15 +137,21 @@
             path: `/search/${singer.id}`
           })
           this.setSinger(singer)
+        } else {
+          this.insertSong(item)
         }
       },
       ...mapMutations({
         setSinger: 'SET_SINGER'
-      })
+      }),
+      ...mapActions([
+        'insertSong'
+      ])
     },
     components: {
       Scroll,
-      Loading
+      Loading,
+      NoResult
     }
   }
 </script>

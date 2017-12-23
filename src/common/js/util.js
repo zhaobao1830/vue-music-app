@@ -19,3 +19,17 @@ export function shuffle (arr) {
   }
   return _arr
 }
+
+// 节流，就是让一个方法过多少秒后再执行
+// 思路，新建一个方法，在这个方法里面写个延时任务
+export function debounce (func, delay) {
+  let timer
+  return function (...args) {
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      func.apply(this, args)
+    }, delay)
+  }
+}

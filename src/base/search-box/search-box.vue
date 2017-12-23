@@ -8,6 +8,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import {debounce} from 'common/js/util'
+
   export default {
     props: {
       placeholder: {
@@ -21,9 +23,11 @@
       }
     },
     created () {
-      this.$watch('query', (newQuery) => {
+      // this.$watch类似于watch()，使用这个的原因是为了debounce，当我们在输入框快速输入内容的时候，
+      // 会没输入一个就调用一次search方法，这是需要debounce来进行节流
+      this.$watch('query', debounce((newQuery) => {
         this.$emit('query', newQuery)
-      })
+      }, 200))
     },
     methods: {
       setQuery (query) {
