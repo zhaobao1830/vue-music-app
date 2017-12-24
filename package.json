@@ -25,7 +25,8 @@
     "vue-lazyload": "1.0.3",
     "vue-router": "^2.3.1",
     "vuex": "^2.3.1",
-    "js-base64": "^2.1.9"
+    "js-base64": "^2.1.9",
+    "good-storage": "^1.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",
