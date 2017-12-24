@@ -4,7 +4,9 @@
           class="suggest"
           :data="result"
           :pullup="pullup"
-          @scrollToEnd="searchMore">
+          @scrollToEnd="searchMore"
+          @beforeScroll="listScroll"
+  >
     <ul class="suggest-list">
       <li @click="selectItem(item)" class="suggest-item" v-for="(item, index) in result">
         <div class="icon">
@@ -132,7 +134,6 @@
             id: item.singermid,
             name: item.singername
           })
-          console.log(singer)
           this.$router.push({
             path: `/search/${singer.id}`
           })
@@ -140,6 +141,9 @@
         } else {
           this.insertSong(item)
         }
+      },
+      listScroll () {
+        this.$emit('listScroll')
       },
       ...mapMutations({
         setSinger: 'SET_SINGER'
