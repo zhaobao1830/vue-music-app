@@ -1,4 +1,5 @@
 <template>
+  <!--歌手详情页-->
   <transition name="slide">
     <music-list :songs="songs" :title="title" :bgImage="bgImage"></music-list>
   </transition>

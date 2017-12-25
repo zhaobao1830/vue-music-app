@@ -1,4 +1,5 @@
 <template>
+  <!--歌手页面的列表-->
   <Scroll @scrolls= "scroll"
           class="listview"
           :listen-scroll="listenScroll"
