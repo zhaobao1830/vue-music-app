@@ -1,5 +1,5 @@
-<!--搜索输入框-->
 <template>
+  <!--搜索输入框-->
    <div class="search-box">
      <i class="icon-search"></i>
      <input ref="query" v-model="query" class="box" :placeholder="placeholder">

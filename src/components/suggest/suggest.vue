@@ -1,4 +1,4 @@
-<!--搜索结果-->
+<!--搜索结果页面-->
 <template>
   <Scroll ref="suggest"
           class="suggest"
