@@ -28,8 +28,8 @@
         </div>
       </Scroll>
     </div>
-    <div class="search-result" v-show="query">
-       <suggest @select="saveSearch" @listScroll="blurInput" :query="query"></suggest>
+    <div ref="searchResult" class="search-result" v-show="query">
+       <suggest ref="suggest" @select="saveSearch" @listScroll="blurInput" :query="query"></suggest>
     </div>
     <confirm ref="confirm" @confirm="clearSearchHistory" text="是否清空所有搜索历史" confirmBtnText="清空"></confirm>
     <router-view></router-view>
@@ -45,8 +45,10 @@
   import {ERR_OK} from 'api/config'
   import Suggest from 'components/suggest/suggest'
   import {mapActions, mapGetters} from 'vuex'
+  import {playlistMixin} from 'common/js/mixin'
 
   export default {
+    mixins: [playlistMixin],
     data () {
       return {
         hotKey: [],
@@ -66,6 +68,14 @@
       ])
     },
     methods: {
+      handlePlaylist (playlist) {
+        const bottom = playlist.length > 0 ? '60px' : 0
+        this.$refs.searchResult.style.bottom = bottom
+        this.$refs.suggest.refresh()
+        this.$refs.shortcutWrapper.style.bottom = bottom
+        // 这个refresh（）方法是调用的shortcut组件里面的refresh()方法，然后在组件里面，调用scroll组件的refresh()方法
+        this.$refs.shortcut.refresh()
+      },
       _getHotKey () {
         getHotKey().then((res) => {
           this.hotKey = res.data.hotkey.slice(0, 10)
