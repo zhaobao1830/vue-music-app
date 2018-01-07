@@ -6,22 +6,22 @@
           <h1 class="title">
             <i class="icon"></i>
             <span class="text"></span>
-            <span class="clear"><i class="icon-clear"></i></span>
+            <span class="clear" @click="showConfirm"><i class="icon-clear"></i></span>
           </h1>
         </div>
         <Scroll ref="listContent" :data="sequenceList" class="list-content">
-          <ul>
-            <li class="item" v-for="(item, index) in sequenceList">
+          <transition-group ref="list" name="list" tag="ul">
+            <li :key="item.id" ref="listItem" class="item" v-for="(item, index) in sequenceList" @click="selectItem(item, index)">
               <i class="current" :class="getCurrentIcon(item)"></i>
               <span class="text" v-html="item.name"></span>
               <span class="like">
               <i class="icon-not-favorite"></i>
             </span>
-              <span class="delete">
+            <span @click.stop="deleteOne(item)" class="delete">
               <i class="icon-delete"></i>
             </span>
             </li>
-          </ul>
+          </transition-group>
         </Scroll>
         <div class="list-operate">
           <div class="add">
@@ -29,17 +29,20 @@
             <span class="text">添加歌曲到队列</span>
           </div>
         </div>
-        <div class="list-close">
+        <div @click="hide" class="list-close">
           <span>关闭</span>
         </div>
       </div>
+      <confirm ref="confirm" @confirm="confirmClear" text="是否清空播放列表" confirmBtnText="清空"></confirm>
     </div>
   </transition>
 </template>
 
 <script type="text/ecmascript-6">
-  import {mapGetters} from 'vuex'
+  import {mapGetters, mapMutations, mapActions} from 'vuex'
+  import {playMode} from 'common/js/config'
   import Scroll from 'base/scroll/scroll'
+  import Confirm from 'base/confirm/confirm'
 
   export default {
     data () {
@@ -50,7 +53,9 @@
     computed: {
       ...mapGetters([
         'sequenceList',
-        'currentSong'
+        'currentSong',
+        'playlist',
+        'mode'
       ])
     },
     methods: {
@@ -63,15 +68,65 @@
       hide () {
         this.showFlag = false
       },
+      // 在播放列表里面，给当前播放歌曲前面加一个icon
       getCurrentIcon (item) {
         if (this.currentSong.id === item.id) {
           return 'icon-play'
         }
         return ''
+      },
+      // 播放列表点击歌曲以后，当前播放歌曲滚动到播放列表最上面，
+      scrollToCurrent (current) {
+        const index = this.sequenceList.findIndex((song) => {
+          return current.id === song.id
+        })
+        this.$refs.listContent.scrollToElement(this.$refs.listItem[index])
+      },
+      // 点击播放列表里的歌曲，切换当前播放歌曲
+      selectItem (item, index) {
+        if (this.mode === playMode.random) {
+          index = this.playlist.findIndex((song) => {
+            return song.id === item.id
+          })
+        }
+        this.setCurrentIndex(index)
+        this.setPlayingState(true)
+      },
+      showConfirm () {
+        this.$refs.confirm.show()
+      },
+      confirmClear () {
+        this.deleteSongList()
+        this.hide()
+      },
+      deleteOne (item) {
+        this.deleteSong(item)
+        if (!this.playlist.length) {
+          this.hide()
+        }
+      },
+      ...mapMutations({
+        'setCurrentIndex': 'SET_CURRENT_INDEX',
+        'setPlayingState': 'SET_PLAYING_STATE'
+      }),
+      ...mapActions([
+        'deleteSong',
+        'deleteSongList'
+      ])
+    },
+    watch: {
+      currentSong (newSong, oldSong) {
+        if (!this.showFlag || newSong.id === oldSong) {
+          return
+        }
+        setTimeout(() => {
+          this.scrollToCurrent(newSong)
+        }, 20)
       }
     },
     components: {
-      Scroll
+      Scroll,
+      Confirm
     }
   }
 </script>
