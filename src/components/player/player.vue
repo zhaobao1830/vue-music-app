@@ -402,7 +402,7 @@
         this.$refs.playlist.show()
       },
       ...mapMutations({
-        setPlayList: 'SET_SEQUENCE_LIST'
+        setFullScreen: 'SET_FULL_SCREEN'
       })
     },
     watch: {
