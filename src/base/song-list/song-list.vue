@@ -2,7 +2,7 @@
   <!--歌曲列表页-->
   <div class="song-list">
     <ul>
-      <li @click="selectItem(songs, index)" v-for="(song, index) in songs" class="item">
+      <li @click="selectItem(song, index)" v-for="(song, index) in songs" class="item">
         <div class="rank" v-show="rank">
           <span :class="getBankCls(index)" v-text="getRankText(index)"></span>
         </div>

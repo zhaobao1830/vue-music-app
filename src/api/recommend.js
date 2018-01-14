@@ -40,7 +40,7 @@ export function getSongList (disstid) {
   const url = debug ? '/api/getCdInfo' : 'http://ustbhuangyi.com/music/api/getCdInfo'
 
   const data = Object.assign({}, commonParams, {
-    disstid,
+    disstid: disstid,
     type: 1,
     json: 1,
     utf8: 1,

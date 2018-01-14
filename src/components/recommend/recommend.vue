@@ -91,9 +91,10 @@
         this.$router.push({
           path: `/recommend/${item.dissid}`
         })
+        this.setDisc(item)
       },
       ...mapMutations({
-        setDiec: 'SET_DISC'
+        setDisc: 'SET_DISC'
       })
     },
     components: {

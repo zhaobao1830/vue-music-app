@@ -4,7 +4,7 @@
       <search-box ref="searchBox" @query="onQueryChange"></search-box>
     </div>
     <div ref="shortcutWrapper" class="shortcut-wrapper" v-show="!query">
-      <Scroll class="shortcut" ref="shortcut" :data="shortcut">
+      <Scroll class="shortcut" ref="shortcut" :data="shortcut" :refreshDelay="refreshDelay">
         <!--为什么要在外面加一个div，原因是：Scroll组件里面，只滚动一个div，而原来里面有俩个div，所以要在外面-->
         <!--加一个div-->
         <div>
